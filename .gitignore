@@ -1,0 +1,31 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Dépendances
+node_modules
+dist
+dist-ssr
+*.local
+
+# Artefacts de build TypeScript
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
+
+# Environnement (ne jamais committer les secrets)
+.env
+.env.*
+!.env.example
+
+# Éditeurs
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
