@@ -73,6 +73,19 @@ export function libelleAnomalie(type: string): string {
   return LIBELLES_ANOMALIE[type as TypeAnomalie] ?? type
 }
 
+/**
+ * Met en forme une liste de types agrégée par la vue (ex. "saisie_trop_rapide,
+ * gps_hors_zone") en libellés lisibles séparés par des virgules.
+ */
+export function formatTypesListe(liste: string | null | undefined): string {
+  if (!liste) return '—'
+  return liste
+    .split(',')
+    .map((t) => libelleAnomalie(t.trim()))
+    .filter(Boolean)
+    .join(', ')
+}
+
 /** Convertit une valeur JSONB en chaîne affichable. */
 export function valeurAffichable(v: unknown): string {
   if (v === null || v === undefined || v === '') return '—'

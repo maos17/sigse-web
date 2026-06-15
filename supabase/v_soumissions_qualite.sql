@@ -11,9 +11,18 @@ select
   (s.donnees ->> 'nom_chef_menage') as nom_chef_menage,
   s.duree_saisie_secondes,
   s.synced_at,
-  count(qf.id) filter (where qf.resolu = false) as anomalies_ouvertes,
+  -- Vraies anomalies (à traiter) : base du tri et des badges de criticité.
+  count(qf.id) filter (where qf.resolu = false and qf.severite = 'anomalie')
+    as anomalies_ouvertes,
   string_agg(distinct qf.type::text, ', ')
-    filter (where qf.resolu = false)            as types_anomalies
+    filter (where qf.resolu = false and qf.severite = 'anomalie')
+    as types_anomalies,
+  -- Signalements informatifs (non bloquants).
+  count(qf.id) filter (where qf.resolu = false and qf.severite = 'info')
+    as infos_ouvertes,
+  string_agg(distinct qf.type::text, ', ')
+    filter (where qf.resolu = false and qf.severite = 'info')
+    as types_infos
 from submissions s
   left join forms f          on f.id = s.form_id
   left join profiles p       on p.id = s.enqueteur_id

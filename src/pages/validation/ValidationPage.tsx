@@ -2,10 +2,11 @@ import { useState } from 'react'
 import { useSubmissionsQualite } from './useSubmissionsQualite'
 import { SubmissionDetail } from './SubmissionDetail'
 import { AnomalieBadge } from '../../components/AnomalieBadge'
+import { InfoBadge } from '../../components/InfoBadge'
 import { StatutBadge } from '../../components/StatutBadge'
 import { Spinner } from '../../components/Spinner'
 import { EmptyState } from '../../components/EmptyState'
-import { formatDateTime, formatDuree } from '../../lib/format'
+import { formatDateTime, formatDuree, formatTypesListe } from '../../lib/format'
 import type { SoumissionQualite } from '../../types/database'
 
 export function ValidationPage() {
@@ -37,6 +38,7 @@ export function ValidationPage() {
             <thead>
               <tr>
                 <th>Anomalies</th>
+                <th>Infos</th>
                 <th>Chef de ménage</th>
                 <th>Formulaire</th>
                 <th>Enquêteur</th>
@@ -56,6 +58,14 @@ export function ValidationPage() {
                   <td>
                     <AnomalieBadge nombre={l.anomalies_ouvertes} />
                   </td>
+                  <td>
+                    <InfoBadge
+                      nombre={l.infos_ouvertes}
+                      titre={
+                        l.types_infos ? formatTypesListe(l.types_infos) : undefined
+                      }
+                    />
+                  </td>
                   <td style={{ fontWeight: 500 }}>{l.nom_chef_menage || '—'}</td>
                   <td>{l.formulaire || '—'}</td>
                   <td>{l.enqueteur || '—'}</td>
@@ -68,7 +78,7 @@ export function ValidationPage() {
                     className="text-muted"
                     style={{ fontSize: 12, maxWidth: 200 }}
                   >
-                    {l.types_anomalies || '—'}
+                    {formatTypesListe(l.types_anomalies)}
                   </td>
                 </tr>
               ))}

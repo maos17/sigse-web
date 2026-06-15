@@ -84,10 +84,15 @@ export type TypeAnomalie =
   | 'valeur_aberrante'
   | 'champ_obligatoire_vide'
 
+/** Sévérité d'un signalement qualité. */
+export type SeveriteFlag = 'anomalie' | 'info'
+
 export interface QualityFlag {
   id: string
   submission_id: string
   type: TypeAnomalie
+  /** 'anomalie' = à traiter (bloquant), 'info' = simple signalement non bloquant. */
+  severite: SeveriteFlag
   detail: string | null
   resolu: boolean
   resolu_par: string | null
@@ -117,6 +122,10 @@ export interface SoumissionQualite {
   nom_chef_menage: string | null
   duree_saisie_secondes: number | null
   synced_at: string
+  /** Anomalies ouvertes (à traiter) — base du tri et des badges de criticité. */
   anomalies_ouvertes: number
   types_anomalies: string | null
+  /** Infos ouvertes (signalements non bloquants) — affichées de façon discrète. */
+  infos_ouvertes: number
+  types_infos: string | null
 }

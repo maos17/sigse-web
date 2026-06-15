@@ -91,8 +91,9 @@ export function useDashboardData(): State {
       let tauxAnomalies = 0
       const { data: flags, error: flagErr } = await supabase
         .from('quality_flags')
-        .select('submission_id, resolu')
+        .select('submission_id, resolu, severite')
         .eq('resolu', false)
+        .eq('severite', 'anomalie')
 
       if (annule) return
       if (!flagErr && flags) {

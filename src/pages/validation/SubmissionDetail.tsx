@@ -143,6 +143,12 @@ export function SubmissionDetail({ ligne, onClose, onTraite }: Props) {
     }
   }
 
+  // Séparation des signalements selon leur sévérité.
+  const anomalies = detail
+    ? detail.flags.filter((f) => f.severite === 'anomalie')
+    : []
+  const infos = detail ? detail.flags.filter((f) => f.severite === 'info') : []
+
   const pied = detail ? (
     modeRejet ? (
       <>
@@ -203,8 +209,8 @@ export function SubmissionDetail({ ligne, onClose, onTraite }: Props) {
           >
             <StatutBadge statut={detail.submission.statut} />
             <span className="text-muted">
-              {detail.questions.length} question(s) · {detail.flags.length}{' '}
-              anomalie(s)
+              {detail.questions.length} question(s) · {anomalies.length} anomalie(s)
+              · {infos.length} info(s)
             </span>
           </div>
 
@@ -221,19 +227,20 @@ export function SubmissionDetail({ ligne, onClose, onTraite }: Props) {
             </div>
           )}
 
-          {/* Anomalies */}
+          {/* Anomalies à traiter */}
           <section style={{ marginBottom: 28 }}>
-            <h3>Anomalies détectées</h3>
-            {detail.flags.length === 0 ? (
+            <h3>Anomalies à traiter</h3>
+            {anomalies.length === 0 ? (
               <p className="text-muted">Aucune anomalie.</p>
             ) : (
               <ul style={{ margin: 0, paddingLeft: 0, listStyle: 'none' }}>
-                {detail.flags.map((f) => (
+                {anomalies.map((f) => (
                   <li
                     key={f.id}
                     style={{
                       padding: '10px 12px',
                       border: '1px solid var(--border)',
+                      borderLeft: '3px solid var(--red)',
                       borderRadius: 'var(--radius)',
                       marginBottom: 8,
                       background: f.resolu ? '#fafbfc' : 'var(--red-bg)',
@@ -248,6 +255,57 @@ export function SubmissionDetail({ ligne, onClose, onTraite }: Props) {
                         >
                           Résolue
                         </span>
+                      )}
+                    </div>
+                    {f.detail && (
+                      <div className="text-muted" style={{ fontSize: 13 }}>
+                        {f.detail}
+                      </div>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+
+          {/* Informations (signalements non bloquants) */}
+          <section style={{ marginBottom: 28 }}>
+            <h3 style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span aria-hidden style={{ color: 'var(--primary)' }}>
+                ℹ
+              </span>
+              Informations
+            </h3>
+            {infos.length === 0 ? (
+              <p className="text-muted">Aucun signalement informatif.</p>
+            ) : (
+              <ul style={{ margin: 0, paddingLeft: 0, listStyle: 'none' }}>
+                {infos.map((f) => (
+                  <li
+                    key={f.id}
+                    style={{
+                      padding: '10px 12px',
+                      border: '1px solid var(--border)',
+                      borderLeft: '3px solid var(--primary)',
+                      borderRadius: 'var(--radius)',
+                      marginBottom: 8,
+                      background: 'var(--primary-light)',
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontWeight: 600,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 6,
+                      }}
+                    >
+                      <span aria-hidden style={{ color: 'var(--primary)' }}>
+                        ℹ
+                      </span>
+                      {libelleAnomalie(f.type)}
+                      {f.resolu && (
+                        <span className="badge badge-gray">Traité</span>
                       )}
                     </div>
                     {f.detail && (
