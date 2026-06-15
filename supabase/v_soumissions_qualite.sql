@@ -12,16 +12,16 @@ select
   s.duree_saisie_secondes,
   s.synced_at,
   -- Vraies anomalies (à traiter) : base du tri et des badges de criticité.
-  count(qf.id) filter (where qf.resolu = false and qf.severite = 'anomalie')
+  count(qf.id) filter (where qf.resolu = false and qf.gravite = 'anomalie')
     as anomalies_ouvertes,
-  string_agg(distinct qf.type::text, ', ')
-    filter (where qf.resolu = false and qf.severite = 'anomalie')
+  array_agg(distinct qf.type::text)
+    filter (where qf.resolu = false and qf.gravite = 'anomalie')
     as types_anomalies,
   -- Signalements informatifs (non bloquants).
-  count(qf.id) filter (where qf.resolu = false and qf.severite = 'info')
+  count(qf.id) filter (where qf.resolu = false and qf.gravite = 'info')
     as infos_ouvertes,
-  string_agg(distinct qf.type::text, ', ')
-    filter (where qf.resolu = false and qf.severite = 'info')
+  array_agg(distinct qf.type::text)
+    filter (where qf.resolu = false and qf.gravite = 'info')
     as types_infos
 from submissions s
   left join forms f          on f.id = s.form_id

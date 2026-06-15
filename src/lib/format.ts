@@ -74,15 +74,19 @@ export function libelleAnomalie(type: string): string {
 }
 
 /**
- * Met en forme une liste de types agrégée par la vue (ex. "saisie_trop_rapide,
- * gps_hors_zone") en libellés lisibles séparés par des virgules.
+ * Met en forme la liste de types agrégée par la vue (array_agg → string[],
+ * ex. ["saisie_trop_rapide", "gps_hors_zone"]) en libellés lisibles séparés
+ * par des virgules. Les types connus sont traduits en français ; les autres
+ * voient simplement leurs underscores remplacés par des espaces.
+ * Renvoie "—" si la liste est nulle ou vide.
  */
-export function formatTypesListe(liste: string | null | undefined): string {
-  if (!liste) return '—'
-  return liste
-    .split(',')
-    .map((t) => libelleAnomalie(t.trim()))
-    .filter(Boolean)
+export function formatTypesListe(types: string[] | null | undefined): string {
+  if (!types || types.length === 0) return '—'
+  return types
+    .map((t) => {
+      const libelle = libelleAnomalie(t)
+      return libelle === t ? t.replace(/_/g, ' ') : libelle
+    })
     .join(', ')
 }
 

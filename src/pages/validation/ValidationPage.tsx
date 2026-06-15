@@ -62,7 +62,9 @@ export function ValidationPage() {
                     <InfoBadge
                       nombre={l.infos_ouvertes}
                       titre={
-                        l.types_infos ? formatTypesListe(l.types_infos) : undefined
+                        l.types_infos && l.types_infos.length > 0
+                          ? formatTypesListe(l.types_infos)
+                          : undefined
                       }
                     />
                   </td>

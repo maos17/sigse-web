@@ -145,9 +145,9 @@ export function SubmissionDetail({ ligne, onClose, onTraite }: Props) {
 
   // Séparation des signalements selon leur sévérité.
   const anomalies = detail
-    ? detail.flags.filter((f) => f.severite === 'anomalie')
+    ? detail.flags.filter((f) => f.gravite === 'anomalie')
     : []
-  const infos = detail ? detail.flags.filter((f) => f.severite === 'info') : []
+  const infos = detail ? detail.flags.filter((f) => f.gravite === 'info') : []
 
   const pied = detail ? (
     modeRejet ? (
